@@ -24,7 +24,7 @@ int32_t ID00002005_init(uint32_t address, uint32_t port)
     //Adding configs data to the NoC Manager *MANDATORY WHEN USING NOC MANAGER*/
     id00003000_addConfigs(address, port, ID00002005_csv, ID00002005_CONFIG_AMOUNT);
     id00003000_getID(address, port, &id);
-    dev_dbg("IPGRVG","INIT: ID READ : %08X\n", id);    
+    dev_dbg("IP_GRVG","INIT: ID READ : %08X\n", id);    
     ID00002005_clearStatus(address, port);
     id00003000_enableINT(address, port, 0);
 
@@ -33,7 +33,7 @@ int32_t ID00002005_init(uint32_t address, uint32_t port)
 
 int32_t ID00002005_startIP(uint32_t address, uint32_t port)
 {
-    dev_dbg("IPGRVG","========== START IP GRVG SUCCESSFULLY ==========\n");
+    dev_dbg("IP_GRVG","========== START IP GRVG SUCCESSFULLY ==========\n");
 
     id00003000_start(address, port);
 

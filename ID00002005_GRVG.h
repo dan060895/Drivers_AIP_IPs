@@ -3,8 +3,6 @@
 
 #include <stdint.h>
 
-#define
-
 extern volatile uint32_t NetStatus[8][8];
 
 #define MMEMIN      0b00000   
@@ -25,11 +23,5 @@ int32_t ID00002005_readData(uint32_t address, uint32_t port, uint32_t *data, uin
 int32_t ID00002005_getStatus(uint32_t address, uint32_t port, uint32_t *status);
 
 int32_t ID00002005_waitDone(uint32_t address, uint32_t port);
-
-int32_t ID00002005_waitReady(uint32_t address, uint32_t port);
-
-int32_t ID00002005_waitDoneRead(uint32_t address, uint32_t port);
-
-int32_t ID00002005_waitDoneWrite(uint32_t address, uint32_t port);
 
 #endif //ID00002005_GRVG_H_
