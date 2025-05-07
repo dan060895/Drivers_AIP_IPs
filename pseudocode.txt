@@ -1,0 +1,115 @@
+BEGIN
+    port_select = UNIFORM_RAND_GEN
+    seeds = randn(2,1)                         //generate 2 seeds
+    aip.writeMem(URVG_MEMIN0, seeds, 2)
+    aip.writeConfReg(loads_seeds_enable, 1) 
+    aip.start()
+    waitDone()
+
+    port_select = GAUSSIAN_RAND_GEN
+    seeds = randn(8,1)                         //generate 8 seeds
+    aip.writeMem(GRVG_MEMIN0, seeds, 2)
+    aip.writeConfReg(loads_seeds_enable, 1) 
+    aip.start()
+    waitDone()
+
+    port_select = DDS
+    aip.writeMem(DDS_MEMIN0, dds_freq) // Configuration
+    aip.start()
+
+    port_select = UNIFORM_RAND_GEN
+    num_flows = 1
+    aip.writeConfReg(num_flows, 1) // Get alpha
+    aip.start()
+    waitDone()
+
+    aip.readMem(URVG_MEMOUT, alpha_reg, 1);
+    alpha_val = alpha_reg[0];
+
+    port_select = CONCATER_GEN
+    aip.writeConfReg(alpha_val, 1)
+    aip.start()
+
+    port_select = MXV0
+    aip.writeConfReg(config_MXV0, 1)
+    aip.start()
+
+    port_select = MXV_CP1
+    aip.writeConfReg(config_MXV1, 1)
+    aip.start()
+
+    port_select = INTERP_D4
+    aip.writeConfReg(interp_factor, 1)
+    aip.start()
+
+    port_select = INTERP_D4
+    aip.writeConfReg(decim_factor, 1)
+    aip.start()
+
+    WHILE True
+        // Obtain package of weighted random variables.
+        port_select = GAUSSIAN_RAND_GEN
+        aip.writeMem(GRVG_MEMIN0, varz, DIM)
+        temp[0] = CP_MODE
+        temp[2] = DIM
+        aip.writeConfReg(temp, 3) 
+        aip.start()
+        waitDone()
+
+        pkgA = aip.readMem(GRVG_MEMOUT0, DIM)
+
+        // Write vector MXV0
+        port_select = MXV0
+        aip.writeMem(MXV0_MEMIN0, pkgA, DIM)
+        aip.start()
+        waitDone()
+
+        // Write MATRIX MXV0
+        j = 0
+        FOR i = 1 TO MXV_NUM_PES
+            //SDRAM
+            pkgUa = sdram_ctrl()
+            aip.writeMem(MXV0_MEMIN1+j, pkgUa, MXV0_SIZE)
+            j = j + 2
+        END
+
+        aip.start()
+        waitDone()
+
+        pkgAUa = aip.readMem(MXV0_MEMOUT0, DIM)
+
+        // Write vector MXV1
+        port_select = MXV1
+        aip.writeMem(MXV1_MEMIN0, pkgAUa, DIM)
+        aip.start()
+
+        // Write MATRIX MXV1
+        j = 0
+        FOR i = 1 TO MXV_NUM_PES
+            //SDRAM
+            pkgPsiUB = sdram_ctrl()
+            aip.writeMem(MXV1_MEMIN1+j, pkgPsiUB, MXV1_SIZE)
+            j = j + 2
+        END
+
+        aip.start()
+        waitDone()
+
+        pkgProcess = aip.readMem(MXV1_MEMOUT0, PROC_LEN)
+
+        port_select = P2S_CONVERTER
+
+        do begin
+            aipCon.getStatus(statusTemp);
+        end
+        while ((statusTemp[done_bit]));  
+
+        aip.writeMem(P2S_MEMIN0, pkgProcess)
+        aip.start()
+
+        waitDone()
+
+    END
+
+END
+    
