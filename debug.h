@@ -26,10 +26,10 @@
 #define IPID          31
 
 // Definiciones de mnemonics para ID00001008_csv
-#define MMEMIN        0
-#define MMEMOUT       2
-#define CCONFIG       4
-// STATUS y IPID ya están definidos
+//#define MMEMIN        0
+//#define MMEMOUT       2
+//#define CCONFIG       4
+// STATUS y IPID ya estï¿½n definidos
 
 #define DEBUG
 #ifdef DEBUG
