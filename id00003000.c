@@ -177,7 +177,8 @@ int32_t id00003000_config(uint32_t mask_value, uint8_t newLocalAddr, uint8_t ret
 
     //set mask value
     LOG_PRINTF("Setting mask value: %08x\n", mask_value);
-    gINT_mask = mask_value;
+    gINT_mask = DONE_BIT|NI_BIT|CE_BIT|0x02;
+
 
     for(uint8_t i=0; i < 8; i++)
         if(gINT_mask&(1<<i))
@@ -306,7 +307,19 @@ int32_t id00003000_start(uint8_t destAddr, uint8_t destPort)
 
     bool comm_err;
     //write packet in memory in
-    write_packet(START_IP, ZERO_CONFIG, NULL, ZERO_FLIT_SIZE, destAddr, destPort);
+    //write_packet(START_IP, ZERO_CONFIG, NULL, ZERO_FLIT_SIZE, destAddr, destPort);
+
+    uint32_t header;
+
+    header=destAddr;
+	header=header << 3;
+	header=header | destPort;
+	header=header << 9;
+	header=header | START_IP;
+	header=header << 12;
+
+    writeMem(MPACKETIN, &header, ONE_FLIT_SIZE, ZERO_OFFSET);
+
 
     start();
 
@@ -353,7 +366,7 @@ int32_t id00003000_getID(uint8_t destAddr, uint8_t destPort, uint32_t* id)
 }
 
 int32_t id00003000_getStatus(uint8_t destAddr, uint8_t destPort, uint32_t* status)
-{
+{  printf("getsatus\n");
     uint32_t tmp[1];
     read(STATUS_CONFIG,tmp, ONE_FLIT_SIZE, destAddr, destPort);
     memcpy(status, tmp, ONE_FLIT_SIZE*sizeof(uint32_t));
@@ -362,7 +375,7 @@ int32_t id00003000_getStatus(uint8_t destAddr, uint8_t destPort, uint32_t* statu
 }
 
 int32_t id00003000_getINT(uint8_t destAddr, uint8_t destPort, uint8_t *int_flags)
-{
+{  printf("getint\n");
     uint32_t tmp[1];
     uint8_t  int_tmp[1];
     read(STATUS_CONFIG,tmp, ONE_FLIT_SIZE, destAddr, destPort);
@@ -374,7 +387,7 @@ int32_t id00003000_getINT(uint8_t destAddr, uint8_t destPort, uint8_t *int_flags
 }
 
 int32_t id00003000_enableINT(uint8_t destAddr, uint8_t destPort, uint8_t idxInt)
-{
+{  printf("enableint\n");
    uint32_t status;
    uint32_t old_mask;
    uint32_t new_mask;
@@ -391,7 +404,7 @@ int32_t id00003000_enableINT(uint8_t destAddr, uint8_t destPort, uint8_t idxInt)
 }
 
 int32_t id00003000_disableINT(uint8_t destAddr, uint8_t destPort, uint8_t idxInt)
-{
+{   printf("disableint\n");
    uint32_t status;
    uint32_t old_mask;
    uint32_t new_mask;
@@ -408,6 +421,7 @@ int32_t id00003000_disableINT(uint8_t destAddr, uint8_t destPort, uint8_t idxInt
 
 int32_t id00003000_clearINT(uint8_t destAddr, uint8_t destPort, uint8_t idxInt)
 {
+	 printf("clearint\n");
     uint32_t status;
     uint32_t clearValue;
     uint32_t clear_bits;
@@ -447,10 +461,14 @@ int32_t id00003000_waitNoCInterruption (void)
 {
 
     while (wait_flag==0) {
+
+
     	//printf("wait process\n");
     }
 
     wait_flag = 0;
+    clearINT(0);
+
 
     return 0;
 }
@@ -515,6 +533,7 @@ int32_t id00003000_enableNoCInterrupts (uint8_t destAddr, uint32_t nic_timestamp
 
 int32_t id00003000_getNetINTStatus (uint8_t intStatus[][8],uint8_t addrs)
 {
+	 //printf("enableint\n");
     INTflags_t *ptr=NULL;
 
     ptr = find_INTflags(addrs);
@@ -532,7 +551,7 @@ int32_t id00003000_getNetINTStatus (uint8_t intStatus[][8],uint8_t addrs)
 }
 
 int32_t id00003000_clearBitNetINTStatus (uint8_t addr, uint8_t port, uint8_t index)
-{
+{/*
     INTflags_t *ptr=NULL;
 
     ptr = find_INTflags(addr);
@@ -541,9 +560,9 @@ int32_t id00003000_clearBitNetINTStatus (uint8_t addr, uint8_t port, uint8_t ind
     {
         LOG_PRINTF("Error, address not found\n");
         //exit (EXIT_FAILURE);
-    }
+    }*/
 
-    ptr->flags[port][index]=0;
+    NetStatus[port][index]=0;
 
     return 0;
 }
@@ -610,22 +629,32 @@ static bool wait_process(void)
     uint32_t status;
 
 
-    getStatus(&status);
-    id00003000_waitNoCInterruption();
+    //getStatus(&status);
 
+    //id00003000_waitNoCInterruption();
+    while (wait_flag==0) {
+    	//printf("wait process\n");
+    }
+
+    wait_flag = 0;
+
+/*
     while(!(status&DONE_BIT) && !(status&CE_BIT)){
     	//printf("hiccccccccccccccccccccccc\n");
         getStatus(&status);
     }
     //getStatus(&status);
-
-    clearStatusFlags(status);
+*/
+    clearINT(0);
+    //clearINT(1);
+    //clearINT(2);
+    //clearStatusFlags(status);
     //clearStatus();
-
+/*
     if(status&CE_BIT)
        error = true;
-
-    return error;
+*/
+    //return error;
 
 /*
 	bool error   = false;
@@ -644,6 +673,7 @@ static bool wait_process(void)
 
     return error;
 */
+    return 0;
 }
 
 int32_t clearStatus(void)
@@ -715,7 +745,7 @@ static int32_t write_packet(uint8_t command, uint8_t config, uint32_t *data, uin
 }
 
 
-static INTflags_t *find_INTflags(uint8_t addr)
+static INTflags_t *find_INTflags(uint8_t addr)//TO FIX
 {
     INTflags_t *ptr=NULL;
 
