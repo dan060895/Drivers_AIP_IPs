@@ -14,8 +14,18 @@ BEGIN
     ID00002005_waitDone()
 
     //Target IP: DDS
-    ID00001005_writeMem(DDS_MEMIN0, dds_freq) // Configuration
-    ID00001005_startIP()
+    pkgDDS[0] = 1074002*freq
+    pkgTemp[0] = pkgDDS[0];
+    pkgTemp[1] = pkgDDS[0];
+    pkgTemp[2] = 'd0; //phase
+    pkgTemp[3] = 'h00004000; //Amplitude 1
+    pkgTemp[4] = 'h00004000; //Amplitude 2
+    pkgTemp[5] = 'd0; // Period2
+    pkgTemp[6] = 'd0; // Period1
+    pkgTemp[7] = 'h00000010;  // bit [4] Enabling generation
+    dds_freq = pkgTemp;
+    ID00002001_writeMem(DDS_MEMIN0, dds_freq) // Configuration
+    ID00002001_startIP()
 
     //Target IP: UNIFORM_RAND_GEN
     num_flows = 1
