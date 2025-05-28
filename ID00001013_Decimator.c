@@ -1,4 +1,4 @@
-#include "ID00001010_CONCATENATOR.h"
+#include "ID00001013_Decimator.h"
 
 #include <stdio.h>
 #include <stdint.h>
@@ -10,44 +10,44 @@
 #include "system.h"
 #include "altera_avalon_pio_regs.h"
 
-#define ID00001010_STATUS_BITS 8
-#define ID00001010_STATUS_BIT_DONE 0
-#define ID00001010_CONFIG_AMOUNT 5
+#define ID00001013_STATUS_BITS 8
+#define ID00001013_STATUS_BIT_DONE 0
+#define ID00001013_CONFIG_AMOUNT 5
 
-static int32_t ID00001010_clearStatus(uint32_t address, uint32_t port);
-static int32_t ID00001010_disableStatus(uint32_t address, uint32_t port);
+static int32_t ID00001013_clearStatus(uint32_t address, uint32_t port);
+static int32_t ID00001013_disableStatus(uint32_t address, uint32_t port);
 
-int32_t ID00001010_init(uint32_t address, uint32_t port)
+int32_t ID00001013_init(uint32_t address, uint32_t port)
 {
     uint32_t id;
 
     //Adding configs data to the NoC Manager *MANDATORY WHEN USING NOC MANAGER*/
-    id00003000_addConfigs(address, port, ID00001010_csv, ID00001010_CONFIG_AMOUNT);
+    id00003000_addConfigs(address, port, ID00001013_csv, ID00001013_CONFIG_AMOUNT);
     id00003000_getID(address, port, &id);
-    dev_dbg("IP_CONCATENATOR","INIT: ID READ : %08X\n", id);    
-    ID00001010_clearStatus(address, port);
+    dev_dbg("IP_DECIMATOR","INIT: ID READ : %08X\n", id);    
+    ID00001013_clearStatus(address, port);
     id00003000_enableINT(address, port, 0);
 
     return 0;
 }
 
-int32_t ID00001010_startIP(uint32_t address, uint32_t port)
+int32_t ID00001013_startIP(uint32_t address, uint32_t port)
 {
-    dev_dbg("IP_CONCATENATOR","========== START IP CONCATENATOR SUCCESSFULLY ==========\n");
+    dev_dbg("IP_DECIMATOR","========== START IP Decimator SUCCESSFULLY ==========\n");
 
     id00003000_start(address, port);
 
     return 0;
 }
 
-int32_t ID00001010_getStatus(uint32_t address, uint32_t port, uint32_t *status)
+int32_t ID00001013_getStatus(uint32_t address, uint32_t port, uint32_t *status)
 {
     id00003000_getStatus(address, port, status);
 
     return 0;
 }
 
-int32_t ID00001010_waitDone(uint32_t address, uint32_t port)
+int32_t ID00001013_waitDone(uint32_t address, uint32_t port)
 {
 
 
@@ -63,9 +63,9 @@ int32_t ID00001010_waitDone(uint32_t address, uint32_t port)
     return 0;
 }
 
-static int32_t ID00001010_clearStatus(uint32_t address, uint32_t port)
+static int32_t ID00001013_clearStatus(uint32_t address, uint32_t port)
 {
-    for(uint32_t i = 0; i < ID00001010_STATUS_BITS; i++)
+    for(uint32_t i = 0; i < ID00001013_STATUS_BITS; i++)
     {
         id00003000_disableINT(address, port, i);
         id00003000_clearINT(address, port, i);
@@ -75,9 +75,9 @@ static int32_t ID00001010_clearStatus(uint32_t address, uint32_t port)
 
 }
 
-static int32_t ID00001010_disableStatus(uint32_t address, uint32_t port)
+static int32_t ID00001013_disableStatus(uint32_t address, uint32_t port)
 {
-    for(uint32_t i = 0; i < ID00001010_STATUS_BITS; i++)
+    for(uint32_t i = 0; i < ID00001013_STATUS_BITS; i++)
     {
         id00003000_disableINT(address, port, i);
         id00003000_clearINT(address, port, i);
@@ -86,10 +86,10 @@ static int32_t ID00001010_disableStatus(uint32_t address, uint32_t port)
     return 0;
 }
 
-int32_t ID00001010_Concatenator_setConf(uint32_t address, uint32_t port, GRVGC_state *GRVGC_currentState)
+int32_t ID00001013_Decimator_setConf(uint32_t address, uint32_t port, GRVGC_state *GRVGC_currentState)
 {
 /*
-	GRVG_configParam configParam;
+	aip_configParam configParam;
 
     configParam.config_reg1 =  ;
 	configParam.config_reg2 =  ;

@@ -1,4 +1,4 @@
-#include "ID00001012_INTPOL2_D4.h"
+#include "ID00001012_IntPol2_D4.h"
 
 #include <stdio.h>
 #include <stdint.h>
@@ -89,7 +89,7 @@ static int32_t ID00001012_disableStatus(uint32_t address, uint32_t port)
 int32_t ID00001012_IntPol2_D4_setConf(uint32_t address, uint32_t port, GRVGC_state *GRVGC_currentState)
 {
 /*
-	GRVG_configParam configParam;
+	aip_configParam configParam;
 
     configParam.config_reg1 =  ;
 	configParam.config_reg2 =  ;

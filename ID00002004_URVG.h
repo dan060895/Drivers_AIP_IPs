@@ -24,4 +24,6 @@ int32_t ID00002004_getStatus(uint32_t address, uint32_t port, uint32_t *status);
 
 int32_t ID00002004_waitDone(uint32_t address, uint32_t port);
 
+int32_t ID00002004_URVG_setConf(uint32_t address, uint32_t port, uint32_t *URVG_currentState);
+
 #endif //ID00002004_URVG_H_

@@ -103,7 +103,7 @@ static int32_t ID00002001_disableStatus(uint32_t address, uint32_t port)
 int32_t ID00002001_DDS_setConf(uint32_t address, uint32_t port, GRVGC_state *GRVGC_currentState)
 {
 /*
-	GRVG_configParam configParam;
+	aip_configParam configParam;
 
     configParam.config_reg1 =  ;
 	configParam.config_reg2 =  ;

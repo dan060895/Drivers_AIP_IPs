@@ -100,24 +100,13 @@ static int32_t ID00002004_disableStatus(uint32_t address, uint32_t port)
     return 0;
 }
 
-int32_t ID00002004_URVG_setConf(uint32_t address, uint32_t port, URVGC_state *URVGC_currentState)
+int32_t ID00002004_URVG_setConf(uint32_t address, uint32_t port, uint32_t *URVG_currentState)
 {
-/*
-	URVG_configParam configParam;
 
-    configParam.config_reg1 =  ;
-	configParam.config_reg2 =  ;
-	configParam.config_reg3 =  ;
-	configParam.config_reg4 =  ;
+	id00003000_writeConfReg(address, port, CCONFIG, URVG_currentState, 1, 0);
 
-	id00003000_writeConfReg(address, port, CCONFIG, &configParam, 4, 0);
+	dev_dbg("IP_URVG","cfg1 : %x  \n", configParam.config_reg1);
 
-	dev_dbg("IPURVG","cfg1 : %x cfg2 : %x cfg3 : %x cfg4: %x \n",
-		       configParam.config_reg1,
-		       configParam.config_reg2,
-		       configParam.config_reg3,
-		       configParam.config_reg4);
-*/
 	return 0;
 }
 

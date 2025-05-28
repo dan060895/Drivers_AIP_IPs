@@ -1,4 +1,4 @@
-#include "ID00001011_INTPOL2_D3.h"
+#include "ID00001011_IntPol2_D3.h"
 
 #include <stdio.h>
 #include <stdint.h>
@@ -103,7 +103,7 @@ static int32_t ID00001011_disableStatus(uint32_t address, uint32_t port)
 int32_t ID00001011_Intpol2_D3_setConf(uint32_t address, uint32_t port, GRVGC_state *GRVGC_currentState)
 {
 /*
-	GRVG_configParam configParam;
+	aip_configParam configParam;
 
     configParam.config_reg1 =  ;
 	configParam.config_reg2 =  ;

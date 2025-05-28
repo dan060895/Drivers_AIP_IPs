@@ -24,4 +24,6 @@ int32_t ID00002005_getStatus(uint32_t address, uint32_t port, uint32_t *status);
 
 int32_t ID00002005_waitDone(uint32_t address, uint32_t port);
 
+int32_t ID00002005_GRVG_setConf(uint32_t address, uint32_t port, uint32_t *GRVG_currentState);
+
 #endif //ID00002005_GRVG_H_

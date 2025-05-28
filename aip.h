@@ -16,6 +16,16 @@ typedef struct aip_config
     uint32_t size;
 } aip_config_t;
 
+
+typedef volatile struct {
+
+	uint32_t config_reg1;
+	uint32_t config_reg2;
+    uint32_t config_reg3;
+    uint32_t config_reg4;
+
+}aip_configParam;
+
 typedef struct aip_regs
 {
     uint32_t aip_dataOut;

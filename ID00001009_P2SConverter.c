@@ -1,4 +1,3 @@
-#include "ID00001009_P2SConverter.h"
 
 #include <stdio.h>
 #include <stdint.h>
@@ -103,7 +102,7 @@ static int32_t ID00001009_disableStatus(uint32_t address, uint32_t port)
 int32_t ID00001009_P2SConverter_setConf(uint32_t address, uint32_t port, P2SCONVERTERC_state *P2SCONVERTERC_currentState)
 {
 /*
-	P2SConverter_configParam configParam;
+	aip_configParam configParam;
 
     configParam.config_reg1 =  ;
 	configParam.config_reg2 =  ;
